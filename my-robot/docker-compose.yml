@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  ros:
+    build: ./ros
+    container_name: ros
+    environment:
+      - DISPLAY=${DISPLAY}
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - ./ros:/home/ros/catkin_ws
+    network_mode: host
+    depends_on:
+      - gazebo
+    command: roslaunch launch/robot.launch
+
+  gazebo:
+    build: ./gazebo
+    container_name: gazebo
+    ports:
+      - "8080:8080"  # For web GUI
+    volumes:
+      - ./ros:/home/ros/urdf
+    network_mode: host
